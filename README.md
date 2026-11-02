@@ -1,149 +1,179 @@
-# Memory-aware automatic vectorizing TinyC compiler
+# Automated Vectorized Compilers
 
-A B.Tech compiler project with an executable pipeline:
+A TinyC compiler that generates scalar x86-64 or AVX2 code for supported integer-array loops. It analyzes loop safety, applies memory optimizations, and uses a cost model to choose among available implementations.
 
-**TinyC → typed TAC → loop/dependence analysis → legal candidates → memory-aware
-cost selection → scalar/AVX2 assembly → native executable.**
+**Compilation pipeline**
 
-The existing scanner, AST stage, simulator and standalone vector demo remain
-available. The integrated compiler consumes Part 3 TAC; it does not match sample
-names or substitute handwritten kernels.
+```text
+TinyC source
+    → lexer / parser → typed three-address code (TAC)
+    → loop, dependence and memory analysis
+    → legal scalar and SIMD candidates
+    → memory-aware cost estimation and selection
+    → x86-64 assembly → native executable
+```
 
-## Build, test and demonstrate
+The integrated vectorizing backend consumes TAC produced by `tinyc_part3`. Earlier scanner, AST, TAC-simulator and standalone vectorization components are also retained in the repository.
 
-Requirements: x86-64 Linux/WSL, GCC/G++, GNU binutils, Make, Flex, Bison, Python 3.
-The compiler uses C++17; the old frontend remains C++11. No Python packages are
-required. Run commands from the repository root; scripts support paths with spaces.
+## Requirements
+
+- **Platform:** x86-64 Linux or WSL Ubuntu.
+- **Build tools:** GCC/G++ (C++17 support), GNU Make, GNU binutils, Flex, Bison, and Bash.
+- **Testing:** Python 3. The compiler and correctness-test scripts do not require third-party Python packages.
+- **Plots and report tables:** Python 3 with **Matplotlib and NumPy**, needed for `make report-applications`.
+- **Native SIMD benchmarking:** AVX2-capable CPU. Generated code includes a runtime AVX2 check and scalar fallback, but the supplied native benchmarking setup expects AVX2 for its GCC comparison binaries.
+
+All commands below run from the **repository root**. A complete build is:
 
 ```bash
 make build
-make test test-tinyc1 test-tinyc2 test-p3-suite test-btp-scalar
-make test-memory        # unit analysis + assembled full-array comparisons with GCC
-make test-runtime
-make test-source-archive # source-only ZIP with non-executable scripts
-make present-memory     # short native demonstration, all six modes and GCC
-make benchmark-forward  # stateful forwarding workloads; raw CSV and native counts
 ```
 
-For the complete professor demonstration:
+> `make` without a target builds the backend and standalone vectorization tools; use `make build` to build the TinyC stages as well.
+
+## Quick start
+
+Build and run the main correctness tests:
 
 ```bash
-make demo-memory
+make build
+make test                 # existing frontend/backend/vectorization tests
+make test-p3-suite        # TinyC to TAC translation tests
+make test-btp-scalar      # scalar TAC and native-code pipeline
+make test-memory          # loop/memory analysis and full-array correctness
+make test-runtime         # runtime guards, thresholds and fallbacks
+make test-applications    # four application-oriented kernels
 ```
 
-The benchmark measures actual generated kernels, excludes initialization and
-validation, compares all six modes against GCC `-O3 -march=native`, and records
-medians, speedups and model prediction agreement. It takes approximately a few
-minutes including tests and compilation. Results are machine-dependent.
+The tests use generated inputs, fixed random seeds, boundary sizes and selected aliasing cases. Results are checked against GCC-generated reference implementations. Full-array comparisons check the output, rather than only checking a small sample of elements. Test scripts and input generators are included in the repository.
 
-## Compile your own kernel
+### Compile and inspect a TinyC kernel
 
 ```bash
 mkdir -p build/demo
-./tinyc_part3/tinyc3 examples/memory/kernels.c targets/x86_64_tinyc.conf build/demo/kernels.tac
+
+# Generate typed TAC from TinyC.
+./tinyc_part3/tinyc3 examples/memory/kernels.c \
+    targets/x86_64_tinyc.conf build/demo/kernels.tac
+
+# Select optimizations and generate x86-64 assembly.
 ./backend/x86_64_backend --mode auto build/demo/kernels.tac \
     --trace build/demo/auto.trace > build/demo/kernels.s
+
+# Assemble and link the kernel functions into a shared library.
 gcc -shared -fPIC build/demo/kernels.s -o build/demo/kernels.so
+
+# Inspect decisions and generated machine code.
 cat build/demo/auto.trace
 objdump -d build/demo/kernels.so
 ```
 
-Functions use the normal x86-64 SysV ABI and can be called from C. For a TinyC
-program defining `main`, link its assembly with `gcc program.s -o program`.
-The supplied array examples are kernels, so they are linked as a library here;
-`make test-memory` also assembles and runs standalone executables.
+Kernel functions follow the x86-64 System V calling convention and can be called from C. To compile a source program that defines `main`, link its generated assembly into an executable using `gcc program.s -o program`.
 
-| Mode | Implementation |
+## Optimization modes
+
+| Mode | Behavior |
 |---|---|
-| `scalar` | Typed scalar TAC, including arrays, pointers and calls |
-| `simd` | Legal contiguous loops, eight int32 lanes, scalar remainder |
-| `reuse` | SIMD plus load reuse with write invalidation |
-| `forward` | Reuse plus exact-address vector store-to-load forwarding |
-| `fusion` | Reuse plus eligible adjacent producer-consumer fusion |
-| `auto` | Minimum estimated-cost legal implementation, including forwarding; pair comparison for fusion |
+| `scalar` | Generate scalar x86-64 code for supported TAC operations. |
+| `simd` | Vectorize supported loops with eight 32-bit integer elements per AVX2 vector; handle remaining elements with scalar code. |
+| `reuse` | Reuse previously loaded vector values when intervening writes cannot invalidate them. |
+| `forward` | Additionally forward vector values from earlier stores to compatible later reads. |
+| `fusion` | Combine eligible adjacent producer-consumer loops, avoiding unnecessary temporary-array accesses. |
+| `auto` | Use the memory-aware cost model to select a legal implementation, including eligible fusion and forwarding. |
 
-Additional options:
+The cost model considers estimated instruction and memory costs, loop length, register pressure, guards and other overheads. It makes an estimated choice; it does not guarantee that the selected implementation is the fastest on every input.
+
+To inspect its assumptions and decisions:
 
 ```bash
 ./backend/x86_64_backend --mode auto build/demo/kernels.tac \
     --weights benchmarks/default.conf --assume-trip 1024 \
-    --alias-policy check --dump-ir --trace build/demo/model.trace > build/demo/model.s
+    --alias-policy check --dump-ir \
+    --trace build/demo/model.trace > build/demo/model.s
 ```
 
-Unknown trip counts use the explicitly reported `--assume-trip` estimate, not
-an invented exact bound. In `auto`, a model-derived runtime trip threshold also
-selects original scalar TAC for short non-fused loops (`--runtime-threshold off`
-disables that profitability check). `--alias-policy check` (default) emits runtime range
-checks; overlapping pointer ranges execute the original scalar loops.
-`--alias-policy reject` rejects SIMD when pointer disjointness is unproven.
-AVX2/OS state is checked at runtime and unavailable SIMD falls back to scalar.
+- `--assume-trip` provides an estimate when a loop bound is not known at compile time; it is **not** an exact runtime bound.
+- With `--alias-policy check` (the default), runtime checks fall back to scalar execution when pointer ranges overlap in ways that prevent safe vectorization. `--alias-policy reject` conservatively rejects vectorization when disjointness cannot be established.
+- For eligible non-fused loops, `auto` can use a runtime trip-count threshold to avoid vectorization on small inputs. This can be disabled with `--runtime-threshold off`.
+- If AVX2 or the required operating-system state is unavailable at runtime, generated SIMD paths fall back to scalar code.
 
-## Supported subset and boundaries
+## Application benchmarks
 
-* SIMD: canonical `i = constant; i < bound; i = i + 1`, straight-line `int`
-  loads/stores at `A[i]`, addition, subtraction, multiplication and invariant
-  integer parameters/constants. `while` with the same TAC shape also works.
-* Scalar fallback: other loop shapes, recurrences, strides, conditionals,
-  division and supported calls. Full arrays and return values are checked.
-* Fusion: adjacent loops with the same induction variable/domain; one internal
-  fixed array temporary, non-escaping, no use outside the pair. General fusion
-  and a separate scalar-fusion candidate are not implemented.
-* int32 arithmetic uses two's-complement wrapping for `+`, `-`, `*`; validation
-  uses GCC `-fwrapv`. Valid pointer bounds and initialized data remain required.
-  Byte-offset arithmetic follows the original TAC's int32 scaling.
-* Up to six integer/pointer parameters, int/void returns and fixed one-dimensional
-  local int arrays. Unsupported types, globals, shadowed names and unsupported
-  opcodes are compile-time errors, not silently skipped computations.
-* The existing TinyC grammar requires declarations before `for`; identifiers
-  contain letters/digits, and there is no preprocessor, VLA or `restrict` syntax.
-* The new backend requires metadata from the current Part 3 translator. The old
-  `x86_64_backend file.tac targets/x86_64_tinyc.conf` invocation remains available
-  for the original scalar exercises.
+Four integer-array kernels are compiled through the **TinyC → TAC → native-code** pipeline and checked against equivalent GCC reference code. These are computational kernels, not full applications or the official STREAM benchmark.
 
-See [the technical report](docs/MEMORY_AWARE_REPORT.md) for exact legality,
-cost assumptions, measured results and limitations, and
-[the baseline audit](docs/MEMORY_AWARE_AUDIT.md) for the original capabilities.
-[The original README](docs/LEGACY_README.md) preserves the previous lab commands.
+| Kernel | Computation | Main optimization | Recorded result at `N = 1024` |
+|---|---|---|---|
+| [Integer vector triad](benchmarks/applications/vector_triad/kernel.c) | `C[i] = A[i] + 3*B[i]` | Basic AVX2 | **25.18×** vs the compiler's scalar backend |
+| [Multi-output transform](benchmarks/applications/multi_output/kernel.c) | Compute sum, difference and product from the same inputs | Read reuse | **1.33×** vs basic SIMD |
+| [Two-stage transform](benchmarks/applications/two_stage/kernel.c) | Produce an intermediate array and then scale it | Loop fusion | **1.35×** vs unfused reuse |
+| [In-place transform](benchmarks/applications/in_place_forward/kernel.c) | Update an array and compute values from the updates | Store-to-load forwarding | **1.24×** vs reuse |
 
-See the [forwarding report](docs/STORE_FORWARDING.md) for its exact proof, liveness
-handling, test counts and machine instructions, the [changed-file inventory](docs/FORWARDING_CHANGES.md), and the [professor walkthrough](docs/DEMONSTRATION.md)
-for source → TAC → IR stages → costs → native execution.
+**Measurement context:** Intel Core i7-1255U under WSL Ubuntu, static loop bounds, unaligned arrays, `N = 1024`. These measurements are hardware- and workload-dependent. The 25.18× scalar-to-SIMD comparison includes overhead from the project's scalar code generator and is **not** a pure AVX2-width speedup. Forwarding also showed slowdowns at larger input sizes.
 
-## Evaluation artifacts
-
-* [Application-oriented evaluation](benchmarks/applications/README.md): four source-to-native
-  kernels, full-array validation, 17-sample measurements, GCC comparisons, cost-model
-  assessment, figures and separate academic report material. Run `make test-applications`,
-  `make benchmark-applications`, then `make report-applications`.
-
-* [Forwarding measurements](benchmarks/results-forward/RESULTS.md): raw samples,
-  native counts, speedups/slowdowns and code-group prediction accuracy.
-* [Calibration and runtime dispatch](docs/VERIFICATION_AND_CALIBRATION.md), with
-  the [recorded earlier evaluation](benchmarks/results-v2/RESULTS.md).
-* `make calibrate-memory` remeasures the separate training probes. The resulting
-  profile is opt-in with `--weights benchmarks/calibration/results/calibrated.conf`.
-* `make evaluate-memory` compares original/calibrated models and runtime dispatch;
-  calibration results are not refitted to forwarding benchmarks.
-
-* [Measured results](benchmarks/results/RESULTS.md): runtime table and model disagreements.
-* `benchmarks/results/raw.csv`: every measured sample and repetition count.
-* `benchmarks/results/summary.csv`: median runtime, speedups and static IR counts.
-* `benchmarks/results/predictions.csv`: predicted and observed winners, equivalence
-  between identical generated modes, and timing differences.
-* `benchmarks/results/environment.json`: CPU, OS, compiler, flags and CPU affinity.
-* `build/benchmarks/<N>/`: source, TAC, all assembly, traces and disassemblies.
-* `build/memory-tests/`: complete-array fixtures, binaries and rejection traces.
-
-To run a shorter repeat without overwriting the recorded full results:
+To reproduce the evaluation:
 
 ```bash
-python3 benchmarks/run.py --sizes 8,1024,32768 --samples 5 --output build/quick-results
+make test-applications
+make benchmark-applications
+make report-applications
 ```
 
-The default cost weights are explained analytic starting assumptions, not fitted
-hardware measurements. The separate opt-in fitted profile is empirical and machine-specific;
-its historical evaluation did not change choices, so no calibration-driven
-improvement was established. The scalar emitter spills TAC values, so speedups against
-it include improvements beyond SIMD lane width. Compare with GCC as well; fewer
-vector loads do not by themselves establish lower DRAM traffic or faster code.
-Run benchmarks without concurrent tests/builds; use serial `make demo-memory`.
+The benchmark driver compares the six compiler modes with GCC `-O3 -march=native` and a GCC non-vectorized reference. It records multiple timing samples, summarizes runtimes and checks full outputs for correctness. **Run benchmarks without concurrent builds or tests**, as competing workloads can affect timings. Running the commands above may regenerate tracked files under `benchmarks/applications/results/`.
+
+For a shorter experiment without overwriting the recorded results:
+
+```bash
+python3 benchmarks/applications/run.py bench \
+    --sizes 8,1024,262144 --dynamic-sizes 1024 \
+    --samples 17 --output build/application-short-run
+python3 benchmarks/applications/report.py \
+    --input build/application-short-run
+```
+
+See the [application benchmark guide](benchmarks/applications/README.md) for the complete procedure, and the [measured results](benchmarks/applications/RESULTS.md) for timings, instruction counts, cost-model decisions, plots, negative results and limitations.
+
+## Other experiments
+
+| Command | Purpose |
+|---|---|
+| `make present-memory` | Generate a concise source-to-native walkthrough across compiler modes. |
+| `make demo-memory` | Run the larger combined test and benchmark workflow. |
+| `make benchmark-memory` | Benchmark supported memory-aware optimization modes. |
+| `make benchmark-forward` | Measure store-to-load forwarding, including cases where it slows execution. |
+| `make calibrate-memory` | Measure training probes and generate an optional machine-specific cost profile. |
+| `make evaluate-memory` | Compare analytical and calibrated weights and runtime selection. |
+| `make test-source-archive` | Check creation and contents of a source-only archive. |
+
+The default weights in `benchmarks/default.conf` are analytical estimates, not measurements fitted to a processor. Calibration produces an optional profile that can be selected with `--weights benchmarks/calibration/results/calibrated.conf`. In the recorded calibration evaluation, the fitted profile **did not change the chosen candidates**; calibration therefore has not been shown to improve selection quality. Improving the model and validating it on more discriminating workloads are open directions.
+
+For a smaller run of the original memory benchmarks, saving output outside the recorded results:
+
+```bash
+python3 benchmarks/run.py --sizes 8,1024,32768 \
+    --samples 5 --output build/quick-results
+```
+
+## Supported language and limitations
+
+- SIMD supports simple counted loops with an increasing-by-one induction variable, contiguous `int32` accesses such as `A[i]`, straight-line bodies, and supported integer `+`, `-` and `*` operations. Equivalent canonical `while` loops also work.
+- Other loop forms, dependencies, strides, conditions, division and supported calls use the scalar backend where possible; the system is **not** a general-purpose C or SIMD compiler.
+- Fusion is restricted to qualifying adjacent loops sharing an iteration domain, with a non-escaping fixed-size local temporary array. General loop fusion is not implemented.
+- Supported functions have up to six integer/pointer parameters and `int`/`void` returns; fixed one-dimensional local integer arrays are supported. Unsupported types, globals or opcodes can produce compile-time errors.
+- TinyC is a restricted C-like language: declarations before `for`, no preprocessor, variable-length arrays or `restrict` syntax.
+- The arithmetic contract uses wrapping 32-bit signed `+`, `-` and `*`, compared with GCC references compiled using `-fwrapv`. Callers must still provide valid pointers, sufficient array bounds and initialized data.
+- The project uses conservative legality checks. Passing extensive tests supports correctness within the tested subset but is not a formal proof for arbitrary input programs.
+- Static vector-instruction counts do not directly measure cache misses, memory bandwidth or DRAM traffic. Cost estimates and measured performance can disagree.
+
+## Repository documentation
+
+- [Architecture and compiler pipeline](docs/ARCHITECTURE.md)
+- [Memory-aware optimization design and limitations](docs/MEMORY_AWARE_REPORT.md)
+- [Build and usage details](docs/BACKEND_USAGE.md)
+- [Step-by-step compilation walkthrough](docs/DEMONSTRATION.md)
+- [Store-to-load forwarding](docs/STORE_FORWARDING.md)
+- [Verification, calibration and runtime dispatch](docs/VERIFICATION_AND_CALIBRATION.md)
+- [Application benchmark methodology and reproduction](benchmarks/applications/README.md)
+- [Application benchmark results](benchmarks/applications/RESULTS.md)
+- [Original project commands](docs/LEGACY_README.md)
+
+Generated objects, executables and temporary benchmark files belong under `build/` or other ignored output locations. Keep source code, test scripts and representative result files in version control so the experiments remain reproducible.
