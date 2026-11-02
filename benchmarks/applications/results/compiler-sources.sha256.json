@@ -1,0 +1,14 @@
+{
+  "backend/ir.cpp": "4e359a787b13abc9e03c2f6ce8a19b36cdccc291486dba447504884bf95720d7",
+  "backend/ir_simulator.cpp": "0fe003dcbcef2d7e314531d67b5e09cbae2ed95b28345e10065c97cd8875b68f",
+  "backend/x86_64_backend.cpp": "8fede946bc4a439a89710e3a05f24fe2934543ce2d01359ff2ea86f12795ed89",
+  "backend/memory/analysis.cpp": "3f39c43288c7ae091428aced47d3753a7d484f4f6f5b6b94dcf3402dfb39c73b",
+  "backend/memory/cost.cpp": "a7c439eea7518522caea0c4bca47b9b23bfe76a29950c46af66f06f8e120a9fb",
+  "backend/memory/emitter.cpp": "4494ede712c911c4f349ce130951704891697c9d0d0fd13acbfb29a49d4c0ca8",
+  "backend/memory/program.cpp": "c13aba353c0231d7a14289e26f690523317935ff168abdc182e014a61eebb9ff",
+  "backend/ir.hpp": "2e98eb559f7a31fc61adf1a1eb52c8a8258b626cf1497175c78d9fde39237338",
+  "backend/memory/compiler.hpp": "989a3c08edb41f92fa4b26dc7f072c9ffaa319b28609e87d15484010b8376365",
+  "tinyc_part3/tinyc3.y": "c7804bab197dd5c1e20ae5086eb2f91d8cd60778fa6f3d85e3cb60b214432937",
+  "tinyc_part3/tinyc3.l": "3c05ad82a8e53c8a7fff2934ff00e1c6889f05e187b6597847b030f3e9ad7ab4",
+  "benchmarks/default.conf": "d9c3a7d268945a953fd89b564691e3ba2b8e29d364b10f2cf2dd59007bb22de0"
+}

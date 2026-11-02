@@ -1,0 +1,38 @@
+{
+  "utc": "2026-11-01T05:52:25.483774+00:00",
+  "cpu": "Architecture:                         x86_64\nCPU op-mode(s):                       32-bit, 64-bit\nAddress sizes:                        39 bits physical, 48 bits virtual\nByte Order:                           Little Endian\nCPU(s):                               12\nOn-line CPU(s) list:                  0-11\nVendor ID:                            GenuineIntel\nModel name:                           12th Gen Intel(R) Core(TM) i7-1255U\nCPU family:                           6\nModel:                                154\nThread(s) per core:                   2\nCore(s) per socket:                   6\nSocket(s):                            1\nStepping:                             4\nBogoMIPS:                             5222.39\nFlags:                                fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ss ht syscall nx pdpe1gb rdtscp lm constant_tsc rep_good nopl xtopology tsc_reliable nonstop_tsc cpuid tsc_known_freq pni pclmulqdq vmx ssse3 fma cx16 pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand hypervisor lahf_lm abm 3dnowprefetch ssbd ibrs ibpb stibp ibrs_enhanced tpr_shadow ept vpid ept_ad fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid rdseed adx smap clflushopt clwb sha_ni xsaveopt xsavec xgetbv1 xsaves avx_vnni vnmi umip waitpkg gfni vaes vpclmulqdq rdpid movdiri movdir64b fsrm md_clear serialize flush_l1d arch_capabilities\nVirtualization:                       VT-x\nHypervisor vendor:                    Microsoft\nVirtualization type:                  full\nL1d cache:                            288 KiB (6 instances)\nL1i cache:                            192 KiB (6 instances)\nL2 cache:                             7.5 MiB (6 instances)\nL3 cache:                             12 MiB (1 instance)\nNUMA node(s):                         1\nNUMA node0 CPU(s):                    0-11\nVulnerability Gather data sampling:   Not affected\nVulnerability Itlb multihit:          Not affected\nVulnerability L1tf:                   Not affected\nVulnerability Mds:                    Not affected\nVulnerability Meltdown:               Not affected\nVulnerability Mmio stale data:        Not affected\nVulnerability Reg file data sampling: Vulnerable: No microcode\nVulnerability Retbleed:               Mitigation; Enhanced IBRS\nVulnerability Spec rstack overflow:   Not affected\nVulnerability Spec store bypass:      Mitigation; Speculative Store Bypass disabled via prctl\nVulnerability Spectre v1:             Mitigation; usercopy/swapgs barriers and __user pointer sanitization\nVulnerability Spectre v2:             Mitigation; Enhanced / Automatic IBRS; IBPB conditional; RSB filling; PBRSB-eIBRS SW sequence; BHI BHI_DIS_S\nVulnerability Srbds:                  Not affected\nVulnerability Tsx async abort:        Not affected\n",
+  "affinity": [
+    0
+  ],
+  "gcc": "gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0",
+  "gcc_flags": "-O3 -march=native -fwrapv -shared -fPIC",
+  "sizes": [
+    1,
+    7,
+    8,
+    17,
+    1024,
+    32768,
+    1048576
+  ],
+  "patterns": [
+    "aligned",
+    "unaligned"
+  ],
+  "samples": 9,
+  "weights": "# Approximate cycle units, analytic initial priors (not fitted CPU measurements).\n# 0.5 load/ALU represents two independent operations per cycle; store/control\n# are charged one cycle. See docs/MEMORY_AWARE_REPORT.md for limitations.\nsetup=12\nload=0.5\nstore=1\nalu=0.5\nbranch=1\nguard=3\npressure=1\n# Extra cycles/byte for array traffic exceeding the modeled L1 working set.\nmemory=0.03125\ncache=32768\nassumed_trip=1024\n",
+  "calibration": "No fitting to these evaluation kernels. Default original analytical profile unless --weights is supplied.",
+  "compiler_sha256": "9a06ee26bd58df9e6134e14e5f3dc968241cc62a3cdb300a74d27a1c3ba9e60a",
+  "runner_sha256": "64633f29439686421f10ec8e27931baa61f86b65c36dcff961367d9348723155",
+  "source_sha256": {
+    "1": "f88956ad5e3b764ffe1b78f568c5e7c3c9bb600920d0053b047bec2970d9ae5c",
+    "7": "905a3e3b3c17fcf59fe0839c839e85912cdb892ca1b10976b35ca8b7a2fcb939",
+    "8": "8db462eb0f9e49f7bc5e4233aec2d9f5a01129e8ebd58e6b583112077838fa29",
+    "17": "446d447253dcce212641b9a949b5ef50140a488ce8c05767760168b408d461fb",
+    "1024": "c3ad033a088408c92c5a6b4bfdfc34884fd24dd126feb3bbdcedb7fd7f72a18a",
+    "32768": "08b9f288c7e3fbec4fa99cbeb6f9a9d26d180b160532864a3e2fccfd128713a0",
+    "1048576": "6d596a03cd3087429b7c2162bd0067239521c72f77a0fd916e2ba3e0f879e520"
+  },
+  "protocol": "Exact static trip counts; five warmup calls; same reps and identical initial buffers for EVERY mode and sample; resets outside timing; single-call and repeated-call full-array GCC verification; fixed-seed randomized mode order; function-call overhead included. Modifying input values wrap as int32.",
+  "counts": "objdump of linked libraries, assembler local vector/tail labels retained; count vmovdqu memory operands only inside vector bodies; GCC counts not inferred from vmovdqu because GCC can fold memory operands."
+}

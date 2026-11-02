@@ -1,0 +1,268 @@
+% Generated from retained measurements; include without overwriting the BTP report.
+
+% Requires: \usepackage{booktabs,graphicx,listings}
+
+% Compile from repository root, or redefine \AppEvalRoot before inclusion.
+
+\providecommand{\AppEvalRoot}{benchmarks/applications}
+
+\section{Application-Oriented Experimental Evaluation}
+
+\label{sec:application-evaluation}
+
+\subsection{Experimental setup}
+
+The evaluation examines four pointwise integer computational kernels using the complete TinyC-to-native-code pipeline. The workloads represent weighted channel combination, multi-output transformation, a two-stage processing chain, and an in-place state update. They are simplified kernels rather than complete applications. The integer triad is not the official STREAM benchmark.
+
+The compiler implementation and analytical cost weights were held fixed throughout evaluation. All kernels use canonical counted loops and contiguous 32-bit integer arrays. Signed addition, subtraction and multiplication follow the documented wrapping contract; GCC references were compiled with \texttt{-fwrapv}. No \texttt{restrict} assumptions or manually implemented SIMD were introduced.
+
+Measurements were collected on an Intel Core i7-1255U under WSL Ubuntu, using gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0. The process was pinned to guest logical CPU 0. Physical Performance-core versus Efficient-core placement, frequency and host scheduling could not be established from WSL topology.
+
+Each configuration contains 17 timed samples after five warmup calls. The experiment compares six compiler modes, GCC \texttt{-O3 -march=native}, and GCC with loop and SLP vectorization disabled. Both 64-byte-aligned and four-byte-offset bases were measured. Compilation, driver heap allocation, initialization, buffer resets, reference execution and verification were excluded from timing. Function-call, dispatch and kernel stack-frame costs were included.
+
+Identical repetition counts and initial buffers were used for every implementation. A shuffled order with cyclic rotations balanced method positions. Complete outputs were verified after each timed batch. In particular, mutable inputs were restored before every sample, preventing an in-place kernel from receiving a different workload from its reference.
+
+Static-bound source variants expose the exact trip count to both compilers. Runtime-bound variants share one binary across lengths. Unknown-bound candidate costs retain the existing assumed trip count of 1024; eligible non-fused auto plans additionally apply their runtime profitability threshold.
+
+\subsection{Benchmark descriptions}
+
+The following listings are the actual TinyC inputs. Unused pointer arguments provide a common six-argument calling convention. The multi-output kernel uses the full six-register argument limit. The two-stage temporary is local, fixed-size, non-escaping and unobserved after its consumer loop. Static variants specialize the bound and temporary extent equally for TinyC and GCC.
+
+\lstinputlisting[language=C,basicstyle=\ttfamily\small,caption={Integer vector triad},label={lst:app-vector-triad}]{\AppEvalRoot/vector_triad/kernel.c}
+
+\lstinputlisting[language=C,basicstyle=\ttfamily\small,caption={Multi-output transform},label={lst:app-multi-output}]{\AppEvalRoot/multi_output/kernel.c}
+
+\lstinputlisting[language=C,basicstyle=\ttfamily\small,caption={Two-stage transform},label={lst:app-two-stage}]{\AppEvalRoot/two_stage/kernel.c}
+
+\lstinputlisting[language=C,basicstyle=\ttfamily\small,caption={In-place derived outputs},label={lst:app-in-place-forward}]{\AppEvalRoot/in_place_forward/kernel.c}
+
+\subsection{Correctness and generated instructions}
+
+Before accepting performance data, 19,968 kernel executions completed with 16,896 full-allocation and return-value comparisons, including 768 instrumented path checks. Validation covered all sixteen lengths from zero to 1,048,576, three deterministic seeds, six alias layouts, static and dynamic bounds, and eight implementations. CPU-disabled and overlapping-pointer paths retained scalar behavior. The pre-existing regression suite separately passed 41,400 executions and 34,560 comparisons, together with 152 runtime checks.
+
+At a representative length of 1024, machine-code inspection establishes the transformations in Table~\ref{tab:app-counts}. Counts include folded memory operands and exclude guards, scalar fallback and scalar/SSE remainder regions. They are static instructions per eight-element batch, summing the two bodies for an unfused pair. They are not measurements of external memory traffic.
+
+\begin{table}[htbp]\centering\small
+
+\caption{Observed 256-bit load/store counts from linked code at $N=1024$.}
+
+\label{tab:app-counts}
+
+\begin{tabular}{lrrrrr}\toprule
+
+Kernel & Basic SIMD & Reuse & Forward & Fusion & GCC O3 \\
+
+\midrule
+
+Integer vector triad & 2/1 & 2/1 & 2/1 & 2/1 & 2/1 \\
+
+Multi-output transform & 6/3 & 2/3 & 2/3 & 2/3 & 6/3 \\
+
+Two-stage transform & 3/2 & 3/2 & 3/2 & 2/1 & 3/2 \\
+
+In-place derived outputs & 6/4 & 4/4 & 2/4 & 4/4 & 4/4 \\
+
+\bottomrule\end{tabular}\end{table}
+
+Read reuse reduces the multi-output kernel from six to two vector loads. Store forwarding reduces the in-place kernel from four loads after read reuse to two, retaining all four stores. The first stored A value and the stored D value are forwarded; the final A store has no subsequent read in this workload. Fusion removes the internal temporary accesses and reduces the two-stage pair from three loads and two stores to two loads and one store. GCC vectorizes the representative kernels; its two-stage code retains two vector loops. GCC also uses shifts and addition for multiplication by three. These observations are specific to the recorded compiler version, source and flags.
+
+\subsection{Runtime results}
+
+Tables below provide medians for predetermined medium and large unaligned static-bound configurations. Complete raw samples, interquartile ranges, minima, maxima, all sizes and both alignments are retained in the accompanying CSV files. Ratios use baseline runtime divided by optimized runtime. Comparisons against the generated scalar backend include removal of its TAC-related stack traffic and therefore do not isolate SIMD lane-width gains.
+
+\begin{table}[htbp]\centering\small
+
+\caption{Integer vector triad: measured median runtime in microseconds per call.}
+
+\begin{tabular}{lrr}\toprule
+
+Implementation & $N=1024$ & $N=262144$ \\
+
+\midrule
+
+Scalar & 2.7951 & 781.6846 \\
+
+SIMD & 0.1110 & 77.9293 \\
+
+Reuse & 0.1069 & 66.2051 \\
+
+Forward & 0.1061 & 61.1331 \\
+
+Fusion & 0.1096 & 63.3589 \\
+
+Auto & 0.1053 & 63.0106 \\
+
+GCC O3 & 0.0731 & 62.4654 \\
+
+GCC scalar & 0.2991 & 88.4368 \\
+
+\bottomrule\end{tabular}\end{table}
+
+\begin{table}[htbp]\centering\small
+
+\caption{Multi-output transform: measured median runtime in microseconds per call.}
+
+\begin{tabular}{lrr}\toprule
+
+Implementation & $N=1024$ & $N=262144$ \\
+
+\midrule
+
+Scalar & 6.6819 & 1914.0725 \\
+
+SIMD & 0.2694 & 201.2791 \\
+
+Reuse & 0.2026 & 201.0627 \\
+
+Forward & 0.1871 & 214.8119 \\
+
+Fusion & 0.1837 & 224.9236 \\
+
+Auto & 0.2003 & 221.2971 \\
+
+GCC O3 & 0.1805 & 248.1730 \\
+
+GCC scalar & 0.8687 & 346.2724 \\
+
+\bottomrule\end{tabular}\end{table}
+
+\begin{table}[htbp]\centering\small
+
+\caption{Two-stage transform: measured median runtime in microseconds per call.}
+
+\begin{tabular}{lrr}\toprule
+
+Implementation & $N=1024$ & $N=262144$ \\
+
+\midrule
+
+Scalar & 4.7278 & 1332.9303 \\
+
+SIMD & 0.1734 & 121.9876 \\
+
+Reuse & 0.1558 & 124.8274 \\
+
+Forward & 0.1638 & 132.2874 \\
+
+Fusion & 0.1157 & 75.8169 \\
+
+Auto & 0.1022 & 70.5959 \\
+
+GCC O3 & 0.1175 & 122.7897 \\
+
+GCC scalar & 0.5753 & 164.8127 \\
+
+\bottomrule\end{tabular}\end{table}
+
+\begin{table}[htbp]\centering\small
+
+\caption{In-place derived outputs: measured median runtime in microseconds per call.}
+
+\begin{tabular}{lrr}\toprule
+
+Implementation & $N=1024$ & $N=262144$ \\
+
+\midrule
+
+Scalar & 8.6954 & 2399.4504 \\
+
+SIMD & 0.3197 & 218.3978 \\
+
+Reuse & 0.3043 & 197.2633 \\
+
+Forward & 0.2460 & 215.7504 \\
+
+Fusion & 0.2955 & 205.9160 \\
+
+Auto & 0.2460 & 200.9905 \\
+
+GCC O3 & 0.2597 & 201.4112 \\
+
+GCC scalar & 1.0076 & 389.5520 \\
+
+\bottomrule\end{tabular}\end{table}
+
+\begin{figure}[htbp]\centering
+
+\includegraphics[width=\linewidth]{\AppEvalRoot/results/figures/runtime.pdf}
+
+\caption{Median runtime versus array length for static, unaligned inputs. Axes are logarithmic; the auto band denotes its interquartile range. Zero-length cases remain in the data tables.}\label{fig:app-runtime}
+
+\end{figure}
+
+\begin{figure}[htbp]\centering
+
+\includegraphics[width=\linewidth]{\AppEvalRoot/results/figures/speedup.pdf}
+
+\caption{Speedup relative to generated scalar code. Function calls and guards are included; scalar speedups include reduced TAC overhead.}\label{fig:app-speedup}
+
+\end{figure}
+
+\begin{figure}[htbp]\centering
+
+\includegraphics[width=\linewidth]{\AppEvalRoot/results/figures/memory_instructions.pdf}
+
+\caption{Static vector memory instructions at length 1024, including folded GCC operands. The unfused two-stage count sums two loop bodies.}\label{fig:app-memory-instructions}
+
+\end{figure}
+
+\begin{figure}[htbp]\centering
+
+\includegraphics[width=\linewidth]{\AppEvalRoot/results/figures/optimization_effects.pdf}
+
+\caption{Transformation-specific speedups using appropriate baselines. Values below one indicate slower execution. Both alignments are included.}\label{fig:app-optimization-effects}
+
+\end{figure}
+
+\subsection{Cost-model assessment and cross-benchmark discussion}
+
+Exact linked function bytes were used to group equivalent explicit implementations before identifying the measured fastest group. The selected runtime branch and exact code identity were recorded separately, since dispatch instructions may distinguish auto from its underlying explicit candidate. Timing differences between identical code were not attributed to the named optimization.
+
+\begin{table}[htbp]\centering\small
+
+\caption{Cost-model decision agreement and measured performance proximity.}
+
+\begin{tabular}{lrrr}\toprule
+
+Bound policy & Agreement & Within 5\% of best & Median auto/best \\
+
+\midrule
+
+static & 103/128 & 91/128 & 1.006 \\
+
+dynamic & 65/80 & 54/80 & 1.016 \\
+
+\bottomrule\end{tabular}\end{table}
+
+The unchanged model estimates issued loads, stores, arithmetic, setup, register pressure and a working-set proxy. It does not represent every throughput interaction or dependency chain. Prediction failures, measured winners and relative losses are retained for every configuration; no coefficient was adjusted using these evaluation workloads.
+
+For integer vector triad, the measured scalar-to-simd speedup was 25.176 times at N=1024, 10.031 times at N=262144, 7.690 times at N=1048576. Ratios below one denote slowdowns.
+
+For multi-output transform, the measured simd-to-reuse speedup was 1.330 times at N=1024, 1.001 times at N=262144, 0.943 times at N=1048576. Ratios below one denote slowdowns.
+
+For two-stage transform, the measured reuse-to-fusion speedup was 1.347 times at N=1024, 1.646 times at N=262144, 1.863 times at N=1048576. Ratios below one denote slowdowns.
+
+For in-place derived outputs, the measured reuse-to-forward speedup was 1.237 times at N=1024, 0.914 times at N=262144, 0.879 times at N=1048576. Ratios below one denote slowdowns.
+
+For the in-place kernel at lengths of at least 8192, forwarding had a slower median than reuse in 10 of 14 bound-policy/alignment configurations. Thus, eliminating vector loads did not guarantee a runtime improvement. Cache-resident reloads, hardware store forwarding, dependency chains, code placement and system variability are plausible influences; the experiment does not identify a unique microarchitectural cause.
+
+The dynamic two-stage kernel exposed a separate compiler-policy effect: default GCC probes the pages of its 4 MiB stack temporary before checking the trip count. In a supplemental controlled run at N=0, the median was 4637.3 ns with default probing and 2.1 ns with only stack-clash probing disabled. The TinyC backend does not emit these probes. Therefore the very large tiny-call GCC ratios are not attributed to fusion. This supplemental control changes no model weights and is excluded from candidate decision accuracy.
+
+\subsection{Limitations and reproducibility}
+
+The evaluation covers four restricted kernels, not a general-purpose C compiler or complete applications. Warm/repeated calls, buffer resets, guest affinity and uncontrolled physical placement limit generalization. Memory-controller traffic, cache misses, energy and hardware store-buffer behavior were not measured. Small calls include substantial dispatch overhead. Constant-bound GCC may unroll or simplify differently. Bootstrap intervals are exploratory and do not correct for multiple comparisons. The correctness matrix provides empirical coverage rather than a proof of compiler correctness.
+
+The source programs, GCC references, generated TAC, optimization traces, representative assembly/disassembly, raw timing CSV, grouped predictions and figures are retained in the application-evaluation directory. Existing BTP report files are not overwritten. The following commands reproduce correctness, measurement and report generation:
+
+\begin{lstlisting}[basicstyle=\ttfamily\small]
+
+make test-applications
+
+make benchmark-applications
+
+make benchmark-application-stack-control
+
+make report-applications
+
+\end{lstlisting}
+

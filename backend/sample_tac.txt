@@ -1,0 +1,7 @@
+# tab-separated: op arg1 arg2 result
+=	7		x
+=	2		y
+*	x	y	t0
++	t0	5	t1
+=	t1		z
+return	z		

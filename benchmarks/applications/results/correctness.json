@@ -1,0 +1,56 @@
+{
+  "status": "PASS",
+  "validation_key": "7dcf0011e94da076e26f9e6ca2bfa2da1136bb29ca1b02f221f9824ca7f70793",
+  "utc": "2026-11-01T15:43:42.433375+00:00",
+  "sizes": [
+    0,
+    1,
+    7,
+    8,
+    9,
+    15,
+    16,
+    17,
+    127,
+    128,
+    1003,
+    1024,
+    8192,
+    32768,
+    262144,
+    1048576
+  ],
+  "kernels": [
+    "vector_triad",
+    "multi_output",
+    "two_stage",
+    "in_place_forward"
+  ],
+  "seeds": [
+    19,
+    627,
+    2026
+  ],
+  "layouts": [
+    "disjoint",
+    "C=A",
+    "B=A",
+    "C=A+1",
+    "C=A-1",
+    "D=C and E=C+1"
+  ],
+  "executions": 19968,
+  "comparisons": 16896,
+  "path_checks": 768,
+  "implementations": [
+    "scalar",
+    "simd",
+    "reuse",
+    "forward",
+    "fusion",
+    "auto",
+    "gcc",
+    "gcc_scalar"
+  ],
+  "contract": "all five complete allocations including guards and return value, GCC -fwrapv; no timing accepted until complete certificate"
+}

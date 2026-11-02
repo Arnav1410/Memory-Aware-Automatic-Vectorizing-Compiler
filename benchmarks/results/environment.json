@@ -1,0 +1,32 @@
+{
+  "recorded_utc": "2026-10-31T08:52:07.463937+00:00",
+  "platform": "Linux Arnav-Priyadarshi-HP 6.6.87.2-microsoft-standard-WSL2 #1 SMP PREEMPT_DYNAMIC Thu Jun  5 18:30:46 UTC 2025 x86_64 x86_64 x86_64 GNU/Linux",
+  "cpu": "Architecture:                         x86_64\nCPU op-mode(s):                       32-bit, 64-bit\nAddress sizes:                        39 bits physical, 48 bits virtual\nByte Order:                           Little Endian\nCPU(s):                               12\nOn-line CPU(s) list:                  0-11\nVendor ID:                            GenuineIntel\nModel name:                           12th Gen Intel(R) Core(TM) i7-1255U\nCPU family:                           6\nModel:                                154\nThread(s) per core:                   2\nCore(s) per socket:                   6\nSocket(s):                            1\nStepping:                             4\nBogoMIPS:                             5222.39\nFlags:                                fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ss ht syscall nx pdpe1gb rdtscp lm constant_tsc rep_good nopl xtopology tsc_reliable nonstop_tsc cpuid tsc_known_freq pni pclmulqdq vmx ssse3 fma cx16 pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand hypervisor lahf_lm abm 3dnowprefetch ssbd ibrs ibpb stibp ibrs_enhanced tpr_shadow ept vpid ept_ad fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid rdseed adx smap clflushopt clwb sha_ni xsaveopt xsavec xgetbv1 xsaves avx_vnni vnmi umip waitpkg gfni vaes vpclmulqdq rdpid movdiri movdir64b fsrm md_clear serialize flush_l1d arch_capabilities\nVirtualization:                       VT-x\nHypervisor vendor:                    Microsoft\nVirtualization type:                  full\nL1d cache:                            288 KiB (6 instances)\nL1i cache:                            192 KiB (6 instances)\nL2 cache:                             7.5 MiB (6 instances)\nL3 cache:                             12 MiB (1 instance)\nNUMA node(s):                         1\nNUMA node0 CPU(s):                    0-11\nVulnerability Gather data sampling:   Not affected\nVulnerability Itlb multihit:          Not affected\nVulnerability L1tf:                   Not affected\nVulnerability Mds:                    Not affected\nVulnerability Meltdown:               Not affected\nVulnerability Mmio stale data:        Not affected\nVulnerability Reg file data sampling: Vulnerable: No microcode\nVulnerability Retbleed:               Mitigation; Enhanced IBRS\nVulnerability Spec rstack overflow:   Not affected\nVulnerability Spec store bypass:      Mitigation; Speculative Store Bypass disabled via prctl\nVulnerability Spectre v1:             Mitigation; usercopy/swapgs barriers and __user pointer sanitization\nVulnerability Spectre v2:             Mitigation; Enhanced / Automatic IBRS; IBPB conditional; RSB filling; PBRSB-eIBRS SW sequence; BHI BHI_DIS_S\nVulnerability Srbds:                  Not affected\nVulnerability Tsx async abort:        Not affected\n",
+  "gcc": "gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0",
+  "affinity": [
+    0
+  ],
+  "sizes": [
+    1,
+    7,
+    8,
+    17,
+    1024,
+    32768,
+    1048576
+  ],
+  "samples": 9,
+  "gcc_flags": "-O3 -march=native -fwrapv -shared -fPIC",
+  "weights": "default analytic priors, no calibration fit",
+  "timing": "steady_clock; five warmups; ~10ms/sample; fixed randomized method order; initialization/validation excluded",
+  "bounds": "literal in source, exact trip count; no benchmark-specific optimizer rules",
+  "source_sha256": {
+    "1": "91e8e6e63487bf761a3c4ee96662f3110635fb06711e1e315a71dd75655723b4",
+    "7": "3a36416ff79133a984b8b305fdbd9ce253724951984df1f1a7c7a2e5c2ee196f",
+    "8": "faea4af68af69089d6993e113a320f691fe584afeeef7a4ac9330b3f48bbcb9f",
+    "17": "88df22be139c47489e3814f2fbe2ae32c5914b63f8b04484a6d9dff833f09b05",
+    "1024": "02f8beb1c8572abdd91ea99cd2aa2737c01ba32000328b581526632f7d53f221",
+    "32768": "66780e74d35f3df311a027129a7ab656f119d0acb30c2d940901983bb5584a7a",
+    "1048576": "6f954faafa185e33067c814db0dd005ed83031651d4d82ca22e8abae7556946c"
+  }
+}

@@ -1,0 +1,11 @@
+% Optional standalone preview; does not modify the existing BTP report.
+% From repository root:
+% pdflatex -output-directory=build/application-audit benchmarks/applications/REPORT_PREVIEW.tex
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=24mm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{booktabs,graphicx,listings}
+\usepackage[hidelinks]{hyperref}
+\begin{document}
+\input{benchmarks/applications/REPORT_SECTION.tex}
+\end{document}

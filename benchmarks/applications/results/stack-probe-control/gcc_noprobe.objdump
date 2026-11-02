@@ -1,0 +1,277 @@
+
+/mnt/c/study materials/semester 7/__btp/simulation part/btp_automatedvectorizedcompilers/build/applications/dynamic/shared/two_stage/gcc_noprobe.so:     file format elf64-x86-64
+
+
+Disassembly of section .init:
+
+0000000000001000 <_init>:
+    1000:	endbr64
+    1004:	sub    $0x8,%rsp
+    1008:	mov    0x2fc1(%rip),%rax        # 3fd0 <__gmon_start__@Base>
+    100f:	test   %rax,%rax
+    1012:	je     1016 <_init+0x16>
+    1014:	call   *%rax
+    1016:	add    $0x8,%rsp
+    101a:	ret
+
+Disassembly of section .plt:
+
+0000000000001020 <.plt>:
+    1020:	push   0x2fca(%rip)        # 3ff0 <_GLOBAL_OFFSET_TABLE_+0x8>
+    1026:	jmp    *0x2fcc(%rip)        # 3ff8 <_GLOBAL_OFFSET_TABLE_+0x10>
+    102c:	nopl   0x0(%rax)
+    1030:	endbr64
+    1034:	push   $0x0
+    1039:	jmp    1020 <_init+0x20>
+    103e:	xchg   %ax,%ax
+
+Disassembly of section .plt.got:
+
+0000000000001040 <__cxa_finalize@plt>:
+    1040:	endbr64
+    1044:	jmp    *0x2f96(%rip)        # 3fe0 <__cxa_finalize@GLIBC_2.2.5>
+    104a:	nopw   0x0(%rax,%rax,1)
+
+Disassembly of section .plt.sec:
+
+0000000000001050 <__stack_chk_fail@plt>:
+    1050:	endbr64
+    1054:	jmp    *0x2fa6(%rip)        # 4000 <__stack_chk_fail@GLIBC_2.4>
+    105a:	nopw   0x0(%rax,%rax,1)
+
+Disassembly of section .text:
+
+0000000000001060 <deregister_tm_clones>:
+    1060:	lea    0x2fa9(%rip),%rdi        # 4010 <completed.0>
+    1067:	lea    0x2fa2(%rip),%rax        # 4010 <completed.0>
+    106e:	cmp    %rdi,%rax
+    1071:	je     1088 <deregister_tm_clones+0x28>
+    1073:	mov    0x2f4e(%rip),%rax        # 3fc8 <_ITM_deregisterTMCloneTable@Base>
+    107a:	test   %rax,%rax
+    107d:	je     1088 <deregister_tm_clones+0x28>
+    107f:	jmp    *%rax
+    1081:	nopl   0x0(%rax)
+    1088:	ret
+    1089:	nopl   0x0(%rax)
+
+0000000000001090 <register_tm_clones>:
+    1090:	lea    0x2f79(%rip),%rdi        # 4010 <completed.0>
+    1097:	lea    0x2f72(%rip),%rsi        # 4010 <completed.0>
+    109e:	sub    %rdi,%rsi
+    10a1:	mov    %rsi,%rax
+    10a4:	shr    $0x3f,%rsi
+    10a8:	sar    $0x3,%rax
+    10ac:	add    %rax,%rsi
+    10af:	sar    $1,%rsi
+    10b2:	je     10c8 <register_tm_clones+0x38>
+    10b4:	mov    0x2f1d(%rip),%rax        # 3fd8 <_ITM_registerTMCloneTable@Base>
+    10bb:	test   %rax,%rax
+    10be:	je     10c8 <register_tm_clones+0x38>
+    10c0:	jmp    *%rax
+    10c2:	nopw   0x0(%rax,%rax,1)
+    10c8:	ret
+    10c9:	nopl   0x0(%rax)
+
+00000000000010d0 <__do_global_dtors_aux>:
+    10d0:	endbr64
+    10d4:	cmpb   $0x0,0x2f35(%rip)        # 4010 <completed.0>
+    10db:	jne    1108 <__do_global_dtors_aux+0x38>
+    10dd:	push   %rbp
+    10de:	cmpq   $0x0,0x2efa(%rip)        # 3fe0 <__cxa_finalize@GLIBC_2.2.5>
+    10e6:	mov    %rsp,%rbp
+    10e9:	je     10f7 <__do_global_dtors_aux+0x27>
+    10eb:	mov    0x2f16(%rip),%rdi        # 4008 <__dso_handle>
+    10f2:	call   1040 <__cxa_finalize@plt>
+    10f7:	call   1060 <deregister_tm_clones>
+    10fc:	movb   $0x1,0x2f0d(%rip)        # 4010 <completed.0>
+    1103:	pop    %rbp
+    1104:	ret
+    1105:	nopl   (%rax)
+    1108:	ret
+    1109:	nopl   0x0(%rax)
+
+0000000000001110 <frame_dummy>:
+    1110:	endbr64
+    1114:	jmp    1090 <register_tm_clones>
+    1119:	nopl   0x0(%rax)
+
+0000000000001120 <twoStage>:
+    1120:	endbr64
+    1124:	push   %rbp
+    1125:	mov    %rsp,%rbp
+    1128:	and    $0xffffffffffffffe0,%rsp
+    112c:	sub    $0x400020,%rsp
+    1133:	mov    %fs:0x28,%rax
+    113c:	mov    %rax,0x400018(%rsp)
+    1144:	xor    %eax,%eax
+    1146:	test   %r9d,%r9d
+    1149:	jle    12e0 <.L16>
+    114f:	lea    -0x1(%r9),%r10d
+    1153:	mov    %rdx,%rcx
+    1156:	cmp    $0x6,%r10d
+    115a:	jbe    12e4 <.L17>
+    1160:	mov    %r9d,%r8d
+    1163:	xor    %edx,%edx
+    1165:	mov    %rsp,%rax
+    1168:	shr    $0x3,%r8d
+    116c:	shl    $0x5,%r8
+
+0000000000001170 <.L4>:
+    1170:	vmovdqu (%rdi,%rdx,1),%ymm1
+    1175:	vpaddd (%rsi,%rdx,1),%ymm1,%ymm0
+    117a:	vmovdqa %ymm0,(%rax,%rdx,1)
+    117f:	add    $0x20,%rdx
+    1183:	cmp    %rdx,%r8
+    1186:	jne    1170 <.L4>
+    1188:	mov    %r9d,%edx
+    118b:	and    $0xfffffff8,%edx
+    118e:	cmp    %edx,%r9d
+    1191:	mov    %edx,%r8d
+    1194:	je     1211 <.L5>
+
+0000000000001196 <.L3>:
+    1196:	mov    %r9d,%eax
+    1199:	sub    %r8d,%eax
+    119c:	lea    -0x1(%rax),%r11d
+    11a0:	cmp    $0x2,%r11d
+    11a4:	jbe    11cb <.L6>
+    11a6:	vmovdqu (%rdi,%r8,4),%xmm3
+    11ac:	vpaddd (%rsi,%r8,4),%xmm3,%xmm0
+    11b2:	vmovdqa %xmm0,(%rsp,%r8,4)
+    11b8:	mov    %eax,%r8d
+    11bb:	and    $0xfffffffc,%r8d
+    11bf:	add    %r8d,%edx
+    11c2:	and    $0x3,%eax
+    11c5:	je     12c8 <.L29>
+
+00000000000011cb <.L6>:
+    11cb:	movslq %edx,%rax
+    11ce:	mov    (%rdi,%rax,4),%r8d
+    11d2:	add    (%rsi,%rax,4),%r8d
+    11d6:	mov    %r8d,(%rsp,%rax,4)
+    11da:	lea    0x1(%rdx),%eax
+    11dd:	cmp    %eax,%r9d
+    11e0:	jle    1204 <.L8>
+    11e2:	cltq
+    11e4:	add    $0x2,%edx
+    11e7:	mov    (%rsi,%rax,4),%r8d
+    11eb:	add    (%rdi,%rax,4),%r8d
+    11ef:	cmp    %edx,%r9d
+    11f2:	mov    %r8d,(%rsp,%rax,4)
+    11f6:	jle    1204 <.L8>
+    11f8:	movslq %edx,%rdx
+    11fb:	mov    (%rsi,%rdx,4),%eax
+    11fe:	add    (%rdi,%rdx,4),%eax
+    1201:	mov    %eax,(%rsp,%rdx,4)
+
+0000000000001204 <.L8>:
+    1204:	cmp    $0x6,%r10d
+    1208:	jbe    12ee <.L19>
+
+000000000000120e <.L27>:
+    120e:	mov    %rsp,%rax
+
+0000000000001211 <.L5>:
+    1211:	mov    %r9d,%esi
+    1214:	xor    %edx,%edx
+    1216:	shr    $0x3,%esi
+    1219:	shl    $0x5,%rsi
+    121d:	nopl   (%rax)
+
+0000000000001220 <.L10>:
+    1220:	vmovdqa (%rax,%rdx,1),%ymm2
+    1225:	vpslld $0x1,%ymm2,%ymm0
+    122a:	vpaddd %ymm2,%ymm0,%ymm0
+    122e:	vmovdqu %ymm0,(%rcx,%rdx,1)
+    1233:	add    $0x20,%rdx
+    1237:	cmp    %rsi,%rdx
+    123a:	jne    1220 <.L10>
+    123c:	mov    %r9d,%edx
+    123f:	and    $0xfffffff8,%edx
+    1242:	cmp    %r9d,%edx
+    1245:	mov    %edx,%eax
+    1247:	je     12aa <.L12>
+
+0000000000001249 <.L9>:
+    1249:	mov    %r9d,%esi
+    124c:	sub    %eax,%esi
+    124e:	lea    -0x1(%rsi),%edi
+    1251:	cmp    $0x2,%edi
+    1254:	jbe    1277 <.L13>
+
+0000000000001256 <.L7>:
+    1256:	mov    %eax,%eax
+    1258:	vmovdqa (%rsp,%rax,4),%xmm4
+    125d:	vpslld $0x1,%xmm4,%xmm0
+    1262:	vpaddd %xmm4,%xmm0,%xmm0
+    1266:	vmovdqu %xmm0,(%rcx,%rax,4)
+    126b:	mov    %esi,%eax
+    126d:	and    $0xfffffffc,%eax
+    1270:	add    %eax,%edx
+    1272:	and    $0x3,%esi
+    1275:	je     12aa <.L12>
+
+0000000000001277 <.L13>:
+    1277:	movslq %edx,%rax
+    127a:	mov    (%rsp,%rax,4),%esi
+    127d:	lea    (%rsi,%rsi,2),%esi
+    1280:	mov    %esi,(%rcx,%rax,4)
+    1283:	lea    0x1(%rdx),%eax
+    1286:	cmp    %eax,%r9d
+    1289:	jle    12aa <.L12>
+    128b:	cltq
+    128d:	add    $0x2,%edx
+    1290:	mov    (%rsp,%rax,4),%esi
+    1293:	cmp    %edx,%r9d
+    1296:	lea    (%rsi,%rsi,2),%esi
+    1299:	mov    %esi,(%rcx,%rax,4)
+    129c:	jle    12aa <.L12>
+    129e:	movslq %edx,%rdx
+    12a1:	mov    (%rsp,%rdx,4),%eax
+    12a4:	lea    (%rax,%rax,2),%eax
+    12a7:	mov    %eax,(%rcx,%rdx,4)
+
+00000000000012aa <.L12>:
+    12aa:	mov    %r9d,%eax
+    12ad:	vzeroupper
+
+00000000000012b0 <.L1>:
+    12b0:	mov    0x400018(%rsp),%rdx
+    12b8:	sub    %fs:0x28,%rdx
+    12c1:	jne    12f7 <.L30>
+    12c3:	leave
+    12c4:	ret
+    12c5:	nopl   (%rax)
+
+00000000000012c8 <.L29>:
+    12c8:	cmp    $0x6,%r10d
+    12cc:	ja     120e <.L27>
+    12d2:	mov    $0x4,%esi
+    12d7:	xor    %edx,%edx
+    12d9:	jmp    1256 <.L7>
+    12de:	xchg   %ax,%ax
+
+00000000000012e0 <.L16>:
+    12e0:	xor    %eax,%eax
+    12e2:	jmp    12b0 <.L1>
+
+00000000000012e4 <.L17>:
+    12e4:	xor    %r8d,%r8d
+    12e7:	xor    %edx,%edx
+    12e9:	jmp    1196 <.L3>
+
+00000000000012ee <.L19>:
+    12ee:	xor    %eax,%eax
+    12f0:	xor    %edx,%edx
+    12f2:	jmp    1249 <.L9>
+
+00000000000012f7 <.L30>:
+    12f7:	call   1050 <__stack_chk_fail@plt>
+
+Disassembly of section .fini:
+
+00000000000012fc <_fini>:
+    12fc:	endbr64
+    1300:	sub    $0x8,%rsp
+    1304:	add    $0x8,%rsp
+    1308:	ret

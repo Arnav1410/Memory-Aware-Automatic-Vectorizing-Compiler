@@ -1,0 +1,132 @@
+{
+  "utc": "2026-11-01T15:45:28.643001+00:00",
+  "cpu": "Architecture:                         x86_64\nCPU op-mode(s):                       32-bit, 64-bit\nAddress sizes:                        39 bits physical, 48 bits virtual\nByte Order:                           Little Endian\nCPU(s):                               12\nOn-line CPU(s) list:                  0-11\nVendor ID:                            GenuineIntel\nModel name:                           12th Gen Intel(R) Core(TM) i7-1255U\nCPU family:                           6\nModel:                                154\nThread(s) per core:                   2\nCore(s) per socket:                   6\nSocket(s):                            1\nStepping:                             4\nBogoMIPS:                             5222.39\nFlags:                                fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ss ht syscall nx pdpe1gb rdtscp lm constant_tsc rep_good nopl xtopology tsc_reliable nonstop_tsc cpuid tsc_known_freq pni pclmulqdq vmx ssse3 fma cx16 pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand hypervisor lahf_lm abm 3dnowprefetch ssbd ibrs ibpb stibp ibrs_enhanced tpr_shadow ept vpid ept_ad fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid rdseed adx smap clflushopt clwb sha_ni xsaveopt xsavec xgetbv1 xsaves avx_vnni vnmi umip waitpkg gfni vaes vpclmulqdq rdpid movdiri movdir64b fsrm md_clear serialize flush_l1d arch_capabilities\nVirtualization:                       VT-x\nHypervisor vendor:                    Microsoft\nVirtualization type:                  full\nL1d cache:                            288 KiB (6 instances)\nL1i cache:                            192 KiB (6 instances)\nL2 cache:                             7.5 MiB (6 instances)\nL3 cache:                             12 MiB (1 instance)\nNUMA node(s):                         1\nNUMA node0 CPU(s):                    0-11\nVulnerability Gather data sampling:   Not affected\nVulnerability Itlb multihit:          Not affected\nVulnerability L1tf:                   Not affected\nVulnerability Mds:                    Not affected\nVulnerability Meltdown:               Not affected\nVulnerability Mmio stale data:        Not affected\nVulnerability Reg file data sampling: Vulnerable: No microcode\nVulnerability Retbleed:               Mitigation; Enhanced IBRS\nVulnerability Spec rstack overflow:   Not affected\nVulnerability Spec store bypass:      Mitigation; Speculative Store Bypass disabled via prctl\nVulnerability Spectre v1:             Mitigation; usercopy/swapgs barriers and __user pointer sanitization\nVulnerability Spectre v2:             Mitigation; Enhanced / Automatic IBRS; IBPB conditional; RSB filling; PBRSB-eIBRS SW sequence; BHI BHI_DIS_S\nVulnerability Srbds:                  Not affected\nVulnerability Tsx async abort:        Not affected\n",
+  "cpu_topology": "CPU NODE SOCKET CORE L1d:L1i:L2:L3 ONLINE\n  0    0      0    0 0:0:0:0          yes\n  1    0      0    0 0:0:0:0          yes\n  2    0      0    1 1:1:1:0          yes\n  3    0      0    1 1:1:1:0          yes\n  4    0      0    2 2:2:2:0          yes\n  5    0      0    2 2:2:2:0          yes\n  6    0      0    3 3:3:3:0          yes\n  7    0      0    3 3:3:3:0          yes\n  8    0      0    4 4:4:4:0          yes\n  9    0      0    4 4:4:4:0          yes\n 10    0      0    5 5:5:5:0          yes\n 11    0      0    5 5:5:5:0          yes\n",
+  "uname": "Linux Arnav-Priyadarshi-HP 6.6.87.2-microsoft-standard-WSL2 #1 SMP PREEMPT_DYNAMIC Thu Jun  5 18:30:46 UTC 2025 x86_64 x86_64 x86_64 GNU/Linux\n",
+  "affinity": [
+    0
+  ],
+  "guest_topology": {
+    "core_type": "not exposed",
+    "core_id": "0",
+    "physical_package_id": "0",
+    "thread_siblings_list": "0-1"
+  },
+  "gcc": "gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0",
+  "g++": "g++ (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0",
+  "binutils": "GNU objdump (GNU Binutils for Ubuntu) 2.42",
+  "python": "3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]",
+  "gcc_flags": [
+    "-std=c11",
+    "-O3",
+    "-march=native",
+    "-fwrapv",
+    "-fPIC"
+  ],
+  "gcc_scalar_extra": [
+    "-fno-tree-vectorize",
+    "-fno-tree-slp-vectorize"
+  ],
+  "samples": 17,
+  "static_sizes": [
+    0,
+    1,
+    7,
+    8,
+    9,
+    15,
+    16,
+    17,
+    127,
+    128,
+    1003,
+    1024,
+    8192,
+    32768,
+    262144,
+    1048576
+  ],
+  "dynamic_sizes": [
+    0,
+    1,
+    7,
+    8,
+    9,
+    17,
+    1024,
+    32768,
+    262144,
+    1048576
+  ],
+  "patterns": [
+    "aligned",
+    "unaligned"
+  ],
+  "weights": "# Approximate cycle units, analytic initial priors (not fitted CPU measurements).\n# 0.5 load/ALU represents two independent operations per cycle; store/control\n# are charged one cycle. See docs/MEMORY_AWARE_REPORT.md for limitations.\nsetup=12\nload=0.5\nstore=1\nalu=0.5\nbranch=1\nguard=3\npressure=1\n# Extra cycles/byte for array traffic exceeding the modeled L1 working set.\nmemory=0.03125\ncache=32768\nassumed_trip=1024\n",
+  "weights_sha256": "d9c3a7d268945a953fd89b564691e3ba2b8e29d364b10f2cf2dd59007bb22de0",
+  "backend_sha256": "9a06ee26bd58df9e6134e14e5f3dc968241cc62a3cdb300a74d27a1c3ba9e60a",
+  "frontend_sha256": "9f01bf87aba57832e34ec99178adf773710db9b06e62c20376762cd9a15e29b6",
+  "runner_sha256": "a6ec526f8824d46fd4f6757d02b66037fa3ab47b2934e8de10e38d0f0a7b326b",
+  "clock": "namespace(implementation='clock_gettime(CLOCK_MONOTONIC)', monotonic=True, adjustable=False, resolution=1e-09)",
+  "loadavg_at_start": "0.33 0.45 0.29 1/511 91",
+  "methodology": "5 warmups; same repetitions and initial arrays for every implementation/sample; reset and full GCC oracle outside timing; balanced randomized order; 17 samples by default; all sample outputs verified; function calls and return accumulation included; no model fitting",
+  "physical_core_limit": "Affinity pins a guest logical CPU only. WSL does not establish P/E core placement or fixed frequency.",
+  "correctness": {
+    "status": "PASS",
+    "validation_key": "7dcf0011e94da076e26f9e6ca2bfa2da1136bb29ca1b02f221f9824ca7f70793",
+    "utc": "2026-11-01T15:43:42.433375+00:00",
+    "sizes": [
+      0,
+      1,
+      7,
+      8,
+      9,
+      15,
+      16,
+      17,
+      127,
+      128,
+      1003,
+      1024,
+      8192,
+      32768,
+      262144,
+      1048576
+    ],
+    "kernels": [
+      "vector_triad",
+      "multi_output",
+      "two_stage",
+      "in_place_forward"
+    ],
+    "seeds": [
+      19,
+      627,
+      2026
+    ],
+    "layouts": [
+      "disjoint",
+      "C=A",
+      "B=A",
+      "C=A+1",
+      "C=A-1",
+      "D=C and E=C+1"
+    ],
+    "executions": 19968,
+    "comparisons": 16896,
+    "path_checks": 768,
+    "implementations": [
+      "scalar",
+      "simd",
+      "reuse",
+      "forward",
+      "fusion",
+      "auto",
+      "gcc",
+      "gcc_scalar"
+    ],
+    "contract": "all five complete allocations including guards and return value, GCC -fwrapv; no timing accepted until complete certificate"
+  },
+  "loadavg_at_end": "1.22 1.11 0.96 1/512 299",
+  "completed_utc": "2026-11-01T16:11:33.640768+00:00"
+}

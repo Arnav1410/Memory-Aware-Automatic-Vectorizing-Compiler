@@ -1,0 +1,230 @@
+{
+  "utc": "2026-10-31T10:22:52.231625+00:00",
+  "cpu": "Architecture:                         x86_64\nCPU op-mode(s):                       32-bit, 64-bit\nAddress sizes:                        39 bits physical, 48 bits virtual\nByte Order:                           Little Endian\nCPU(s):                               12\nOn-line CPU(s) list:                  0-11\nVendor ID:                            GenuineIntel\nModel name:                           12th Gen Intel(R) Core(TM) i7-1255U\nCPU family:                           6\nModel:                                154\nThread(s) per core:                   2\nCore(s) per socket:                   6\nSocket(s):                            1\nStepping:                             4\nBogoMIPS:                             5222.39\nFlags:                                fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ss ht syscall nx pdpe1gb rdtscp lm constant_tsc rep_good nopl xtopology tsc_reliable nonstop_tsc cpuid tsc_known_freq pni pclmulqdq vmx ssse3 fma cx16 pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand hypervisor lahf_lm abm 3dnowprefetch ssbd ibrs ibpb stibp ibrs_enhanced tpr_shadow ept vpid ept_ad fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid rdseed adx smap clflushopt clwb sha_ni xsaveopt xsavec xgetbv1 xsaves avx_vnni vnmi umip waitpkg gfni vaes vpclmulqdq rdpid movdiri movdir64b fsrm md_clear serialize flush_l1d arch_capabilities\nVirtualization:                       VT-x\nHypervisor vendor:                    Microsoft\nVirtualization type:                  full\nL1d cache:                            288 KiB (6 instances)\nL1i cache:                            192 KiB (6 instances)\nL2 cache:                             7.5 MiB (6 instances)\nL3 cache:                             12 MiB (1 instance)\nNUMA node(s):                         1\nNUMA node0 CPU(s):                    0-11\nVulnerability Gather data sampling:   Not affected\nVulnerability Itlb multihit:          Not affected\nVulnerability L1tf:                   Not affected\nVulnerability Mds:                    Not affected\nVulnerability Meltdown:               Not affected\nVulnerability Mmio stale data:        Not affected\nVulnerability Reg file data sampling: Vulnerable: No microcode\nVulnerability Retbleed:               Mitigation; Enhanced IBRS\nVulnerability Spec rstack overflow:   Not affected\nVulnerability Spec store bypass:      Mitigation; Speculative Store Bypass disabled via prctl\nVulnerability Spectre v1:             Mitigation; usercopy/swapgs barriers and __user pointer sanitization\nVulnerability Spectre v2:             Mitigation; Enhanced / Automatic IBRS; IBPB conditional; RSB filling; PBRSB-eIBRS SW sequence; BHI BHI_DIS_S\nVulnerability Srbds:                  Not affected\nVulnerability Tsx async abort:        Not affected\n",
+  "affinity": [
+    0
+  ],
+  "gcc": "gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0",
+  "units": "ns",
+  "samples": 9,
+  "training_source_sha256": "d5a93fbc0215ed1c81a4c2fcbcbca645b3d451f9afc48e5481472c435e7c6e45",
+  "primitive_assembly_sha256": "79c3ca031517aa0a1505cdb62f592bd86c91286bb63db45391d786aae33d36b5",
+  "excluded_evaluation_kernels": [
+    "add",
+    "repeated",
+    "producer",
+    "mixed",
+    "strided"
+  ],
+  "fit": {
+    "load": {
+      "intercept_ns_per_group": 0.0009395217391305888,
+      "slope_ns_per_operation": 0.0867449152173913,
+      "points": [
+        [
+          4,
+          0.354692
+        ],
+        [
+          8,
+          0.725274
+        ],
+        [
+          16,
+          1.331443
+        ],
+        [
+          32,
+          2.797044
+        ]
+      ]
+    },
+    "store": {
+      "intercept_ns_per_group": 0.2536637391304346,
+      "slope_ns_per_operation": 0.14158051739130437,
+      "points": [
+        [
+          4,
+          0.84846
+        ],
+        [
+          8,
+          1.356086
+        ],
+        [
+          16,
+          2.514455
+        ],
+        [
+          32,
+          4.790485
+        ]
+      ]
+    },
+    "add": {
+      "intercept_ns_per_group": 0.013419130434782378,
+      "slope_ns_per_operation": 0.08390564130434783,
+      "points": [
+        [
+          4,
+          0.376891
+        ],
+        [
+          8,
+          0.669145
+        ],
+        [
+          16,
+          1.330452
+        ],
+        [
+          32,
+          2.711527
+        ]
+      ]
+    },
+    "multiply": {
+      "intercept_ns_per_group": 0.6328676086956522,
+      "slope_ns_per_operation": 0.37610867608695653,
+      "points": [
+        [
+          4,
+          2.602286
+        ],
+        [
+          8,
+          3.171779
+        ],
+        [
+          16,
+          6.541822
+        ],
+        [
+          32,
+          12.782104
+        ]
+      ]
+    }
+  },
+  "setup_guard_points": [
+    [
+      0,
+      3.56824297075
+    ],
+    [
+      0,
+      2.1614257819800002
+    ],
+    [
+      0,
+      1.86454648653
+    ],
+    [
+      0,
+      2.7972975932899997
+    ],
+    [
+      0,
+      4.129192183450002
+    ],
+    [
+      1,
+      2.1146017906299996
+    ],
+    [
+      1,
+      4.17878164033
+    ],
+    [
+      1,
+      1.8983776826500005
+    ],
+    [
+      1,
+      2.31954434917
+    ],
+    [
+      1,
+      1.838243522199999
+    ],
+    [
+      3,
+      1.67226008062
+    ],
+    [
+      3,
+      2.199134245029999
+    ],
+    [
+      3,
+      3.2651241001999995
+    ],
+    [
+      3,
+      -0.14150093190000135
+    ],
+    [
+      3,
+      0.08049288880000205
+    ],
+    [
+      6,
+      3.6166499195100004
+    ],
+    [
+      6,
+      3.3972545275900004
+    ],
+    [
+      6,
+      4.686621365400001
+    ],
+    [
+      6,
+      5.6577126060000005
+    ],
+    [
+      6,
+      5.8590699949000005
+    ]
+  ],
+  "scalar_scale_ratios": [
+    0.5093730726957636,
+    0.5526544909614463,
+    0.5092584390437276,
+    0.5056320560292934,
+    0.586825045754119,
+    0.5091527588036905,
+    0.5020142871178651,
+    0.6189559622917286,
+    0.5932645667648871,
+    0.5360645763862867,
+    0.6184203377075238,
+    0.5677349314028295
+  ],
+  "stream_medians_ns": {
+    "1024": 61.8513824885,
+    "4096": 236.178187404,
+    "16384": 1510.47540984,
+    "65536": 5570.58196721,
+    "262144": 38149.6,
+    "2097152": 599301.25
+  },
+  "l1_copy_ns_per_byte": 0.007378901937225342,
+  "weights": {
+    "units": "ns",
+    "setup": 2.1445286726944763,
+    "load": 0.0867449152173913,
+    "store": 0.14158051739130437,
+    "alu": 0.08390564130434783,
+    "multiply_extra": 0.2922030347826087,
+    "branch": 0.250575,
+    "guard": 0.28544998686480955,
+    "pressure": 0,
+    "memory": 0.01163643298798275,
+    "cache": 49152,
+    "assumed_trip": 1024,
+    "scalar_scale": 0.5443595336738665
+  },
+  "limitations": "Effective throughput slopes, not instruction latency. Additive costs approximate overlapping execution. No hardware counters or frequency conversion. Pressure penalty disabled because it was not identified."
+}

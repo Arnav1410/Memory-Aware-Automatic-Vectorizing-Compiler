@@ -1,0 +1,43 @@
+{
+  "utc": "2026-10-31T10:23:11.831209+00:00",
+  "cpu": "Architecture:                         x86_64\nCPU op-mode(s):                       32-bit, 64-bit\nAddress sizes:                        39 bits physical, 48 bits virtual\nByte Order:                           Little Endian\nCPU(s):                               12\nOn-line CPU(s) list:                  0-11\nVendor ID:                            GenuineIntel\nModel name:                           12th Gen Intel(R) Core(TM) i7-1255U\nCPU family:                           6\nModel:                                154\nThread(s) per core:                   2\nCore(s) per socket:                   6\nSocket(s):                            1\nStepping:                             4\nBogoMIPS:                             5222.39\nFlags:                                fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ss ht syscall nx pdpe1gb rdtscp lm constant_tsc rep_good nopl xtopology tsc_reliable nonstop_tsc cpuid tsc_known_freq pni pclmulqdq vmx ssse3 fma cx16 pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand hypervisor lahf_lm abm 3dnowprefetch ssbd ibrs ibpb stibp ibrs_enhanced tpr_shadow ept vpid ept_ad fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid rdseed adx smap clflushopt clwb sha_ni xsaveopt xsavec xgetbv1 xsaves avx_vnni vnmi umip waitpkg gfni vaes vpclmulqdq rdpid movdiri movdir64b fsrm md_clear serialize flush_l1d arch_capabilities\nVirtualization:                       VT-x\nHypervisor vendor:                    Microsoft\nVirtualization type:                  full\nL1d cache:                            288 KiB (6 instances)\nL1i cache:                            192 KiB (6 instances)\nL2 cache:                             7.5 MiB (6 instances)\nL3 cache:                             12 MiB (1 instance)\nNUMA node(s):                         1\nNUMA node0 CPU(s):                    0-11\nVulnerability Gather data sampling:   Not affected\nVulnerability Itlb multihit:          Not affected\nVulnerability L1tf:                   Not affected\nVulnerability Mds:                    Not affected\nVulnerability Meltdown:               Not affected\nVulnerability Mmio stale data:        Not affected\nVulnerability Reg file data sampling: Vulnerable: No microcode\nVulnerability Retbleed:               Mitigation; Enhanced IBRS\nVulnerability Spec rstack overflow:   Not affected\nVulnerability Spec store bypass:      Mitigation; Speculative Store Bypass disabled via prctl\nVulnerability Spectre v1:             Mitigation; usercopy/swapgs barriers and __user pointer sanitization\nVulnerability Spectre v2:             Mitigation; Enhanced / Automatic IBRS; IBPB conditional; RSB filling; PBRSB-eIBRS SW sequence; BHI BHI_DIS_S\nVulnerability Srbds:                  Not affected\nVulnerability Tsx async abort:        Not affected\n",
+  "affinity": [
+    0
+  ],
+  "gcc": "gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0",
+  "gcc_flags": "-O3 -march=native -fwrapv -shared -fPIC",
+  "samples": 9,
+  "sizes": [
+    1,
+    7,
+    8,
+    17,
+    1024,
+    32768,
+    1048576
+  ],
+  "dynamic_sizes": [
+    0,
+    1,
+    3,
+    7,
+    8,
+    9,
+    17,
+    64,
+    1024,
+    32768
+  ],
+  "patterns": [
+    "aligned",
+    "unaligned"
+  ],
+  "original_weights": "# Approximate cycle units, analytic initial priors (not fitted CPU measurements).\n# 0.5 load/ALU represents two independent operations per cycle; store/control\n# are charged one cycle. See docs/MEMORY_AWARE_REPORT.md for limitations.\nsetup=12\nload=0.5\nstore=1\nalu=0.5\nbranch=1\nguard=3\npressure=1\n# Extra cycles/byte for array traffic exceeding the modeled L1 working set.\nmemory=0.03125\ncache=32768\nassumed_trip=1024\n",
+  "calibrated_weights": "# Fitted on calibration-only probes; units are nanoseconds, NOT CPU cycles.\nunits=ns\nsetup=2.1445286726944763\nload=0.0867449152173913\nstore=0.14158051739130437\nalu=0.08390564130434783\nmultiply_extra=0.2922030347826087\nbranch=0.250575\nguard=0.28544998686480955\npressure=0\nmemory=0.01163643298798275\ncache=49152\nassumed_trip=1024\nscalar_scale=0.5443595336738665\n",
+  "calibration_sha256": "4a284d1052e3131b95253703da705e593eb1a456e5574ca4feeb5853bb7ef10b",
+  "compiler_sha256": "66d34faa37afedca575ca880e72059b06ebde923cf27d005a5f6323b50db60e4",
+  "runner_source_sha256": "28469736440e8c5b27e406bedc67e59d3ffc569bb3fbfc2b69afaa517c67820a",
+  "protocol": "5 warmups, ~10ms per sample, shuffled paired method rounds, full allocation validation before/after timing, function call included, initialization excluded",
+  "accuracy": "fastest group by pooled median of samples with identical explicit-mode function assembly; runtime guard path tracked separately from exact code identity",
+  "bootstrap": "2000 fixed-seed paired resamples of per-round speedup ratios; 2.5/97.5 percentiles; exploratory, not correction for multiple comparisons"
+}

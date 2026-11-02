@@ -1,0 +1,61 @@
+
+# Compiler and benchmark build outputs
+build/
+*.o
+*.obj
+*.a
+*.so
+*.so.*
+*.dll
+*.dylib
+*.exe
+a.out
+
+# Compiled executables
+/tinyc_part1/tinyc1
+/tinyc_part2/tinyc2
+/tinyc_part3/tinyc3
+/backend/ir_simulator
+/backend/x86_64_backend
+/vectorization/vectorizer_demo
+
+# Generated test outputs
+/tinyc_part3/tests/out/
+
+# Regenerable application benchmark artifacts
+/benchmarks/applications/results/artifacts/
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+
+# Editor and OS
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Temporary files and backups
+*.tmp
+*.bak
+*.zip
+
+# LaTeX intermediate files
+*.aux
+*.log
+*.toc
+*.lof
+*.lot
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.out.ps
+*.bbl
+*.blg
+

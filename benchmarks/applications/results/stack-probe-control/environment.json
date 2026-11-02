@@ -1,0 +1,18 @@
+{
+  "utc": "2026-11-01T16:12:01.305854+00:00",
+  "affinity": [
+    0
+  ],
+  "gcc_flags": [
+    "-std=c11",
+    "-O3",
+    "-march=native",
+    "-fwrapv",
+    "-fPIC"
+  ],
+  "control_extra": "-fno-stack-clash-protection",
+  "stack_protector_and_CET": "unchanged GCC defaults",
+  "samples": 17,
+  "protocol": "separate supplemental run; five warmups; alternated order; identical repetitions and buffers; full repeated GCC oracle before/after timing; one variable changed: GCC stack probing",
+  "purpose": "Attribution control for fixed 4 MiB local-array prologue. Primary eight-mode results and model accuracy remain unchanged."
+}
